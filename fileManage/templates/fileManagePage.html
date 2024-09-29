@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload and Download</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            right: 0;
+            top: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .file-upload-label:hover {
+            background-color: #45a049;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            background-color: #f9f9f9;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        ul li .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        ul li a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        ul li a:hover {
+            text-decoration: underline;
+        }
+
+        ul li form {
+            margin: 0;
+            padding: 0;
+            display: inline;
+        }
+
+        ul li form button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        ul li form button:hover {
+            background-color: #e53935;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}  <!-- 引入 header -->
+    <div class="container">
+        <h1>File Management System</h1>
+        <form action="{{ url_for('fileManage.upload_file') }}" method="post" enctype="multipart/form-data">
+            <div class="file-upload">
+                <label for="file-upload" class="file-upload-label">Choose File</label>
+                <input id="file-upload" type="file" name="file" onchange="displayFileName()">
+            </div>
+            <span id="file-name" class="file-name"></span>
+            <input type="submit" value="Upload">
+        </form>
+
+        <h2>Available Files for Download</h2>
+        <ul>
+            {% for file in files %}
+                <li>
+                    <span>{{ file }}</span>
+                    <div class="actions">
+                        <a href="{{ url_for('fileManage.download_file', filename=file) }}">Download</a>
+                        <form action="{{ url_for('fileManage.delete_file', filename=file) }}" method="post" style="display:inline;">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <footer>
+        <p>File Upload and Download Service &copy; 2024</p>
+    </footer>
+
+    <script>
+        function displayFileName() {
+            var input = document.getElementById('file-upload');
+            var fileName = input.files[0] ? input.files[0].name : '';
+            document.getElementById('file-name').textContent = fileName;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+
+        }
+        .chat-windows{
+            padding: 20px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center; /* 垂直居中 */
+            height: 100vh; /* 使整个页面高度占满 */
+            flex-direction: column; /* 垂直方向布局 */
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%; /* 使宽度为100% */
+            max-width: 500px; /* 最大宽度限制 */
+        }
+        #chat-window {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            height: 400px;
+            overflow-y: scroll;
+            margin-bottom: 20px;
+        }
+        #message-input {
+            flex-grow: 1; /* 允许输入框扩展 */
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-right: 10px; /* 右侧间隔 */
+            margin-bottom: 10px;
+            width: 96%; /* 初始宽度为0，由 flex-grow 控制 */
+
+        }
+        #send-btn {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            flex-shrink: 0; /* 不让按钮缩小 */
+        }
+        #send-btn:hover {
+            background-color: #45a049;
+        }
+        .message {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center; /* 垂直居中 */
+        }
+        .message-content {
+            flex-grow: 1; /* 允许内容区域扩展 */
+        }
+        .timestamp {
+            margin-left: auto; /* 将时间戳推到右边 */
+            color: #888; /* 时间戳颜色 */
+            font-size: 0.9em; /* 时间戳字体大小 */
+        }
+        .message span {
+            font-weight: bold;
+            color: #333;
+        }
+
+        @media (max-width: 600px) {
+            #chat-window {
+                height: 300px; /* 在小屏幕上调整聊天窗口高度 */
+            }
+            #message-input {
+                width: 94%; /* 使输入框在小屏幕上占满宽度 */
+                height: 40px;
+                margin-right: 0; /* 去掉右侧间距 */
+                margin-bottom: 10px; /* 添加底部间距 */
+            }
+            #send-btn {
+                width: 100%; /* 按钮在小屏幕上占满宽度 */
+                height: 60px;
+                font-size: 20px;
+            }
+            .container {
+                padding: 10px; /* 减小容器内边距 */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'header.html' %}  <!-- 引入 header -->
+    <div class="chat-windows">
+        <div class="container">
+        <h2 style="text-align: center;">Welcome to the Chat Room!</h2>
+
+        <div id="chat-window"></div>
+
+        <div style="display: flex; flex-direction: column;">
+            <input type="text" id="message-input" placeholder="Type your message here..." />
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        socket.on('receive_message', function(data) {
+            displayMessage(data);
+        });
+
+        socket.on('load_messages', function(messages) {
+            for (var i = 0; i < messages.length; i++) {
+                displayMessage(messages[i]);
+            }
+        });
+
+        function formatTimestamp(timestamp) {
+            var date = new Date(timestamp * 1000); // 转换为毫秒
+            return date.toLocaleTimeString(); // 使用本地时间格式
+        }
+
+        function displayMessage(data) {
+            var messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.innerHTML = `<div class="message-content"><span>${data.user}:</span> ${data.msg}</div> <span class="timestamp">${formatTimestamp(data.timestamp)}</span>`;
+            document.getElementById('chat-window').appendChild(messageDiv);
+            document.getElementById('chat-window').scrollTop = document.getElementById('chat-window').scrollHeight;
+        }
+
+        function sendMessage() {
+            var message = document.getElementById('message-input').value;
+            if (message.trim() !== '') {
+                socket.emit('send_message', {
+                    msg: message
+                });
+                document.getElementById('message-input').value = '';
+            }
+        }
+
+        document.getElementById('send-btn').addEventListener('click', sendMessage);
+
+        // 添加键盘事件监听器
+        document.getElementById('message-input').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {  // 检测到回车键
+                sendMessage();
+                event.preventDefault(); // 防止默认行为，避免换行
+            }
+        });
+    </script>
+</body>
+</html>

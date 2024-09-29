@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center; /* 水平居中 */
+            align-items: center; /* 垂直居中 */
+            height: 100vh; /* 使页面高度占满 */
+        }
+        .error-container {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .error-title {
+            color: #d9534f; /* 错误标题颜色 */
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .error-message {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .back-link {
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-title">An Error Occurred!</div>
+        <div class="error-message">{{ error }}</div>
+        <a href="/" class="back-link">Go Back to Home</a>
+    </div>
+</body>
+</html>

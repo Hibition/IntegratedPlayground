@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #4CAF50;
+            font-size: 36px;
+        }
+
+        p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .btn {
+            display: block;  /* 修改为块级元素 */
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            border: none;
+            text-decoration: none;
+            margin: 10px auto; /* 上下间距，左右居中 */
+            width: 200px; /* 设置固定宽度 */
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        footer {
+            margin-top: 40px;
+            color: #777;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}  <!-- 引入 header -->
+    <div class="container">
+        <h1>Welcome to the Platform, {{ username }}</h1>
+        <p>Click buttons below to get in different functions.</p>
+        <a href="{{ url_for('fileManage.fileManagePage') }}" class="btn">Go to File Management</a>
+        <a href="{{ url_for('chat.chatRoom') }}" class="btn">Go to Chat</a>
+    </div>
+
+    <footer>
+        <p>The main index page &copy; 2024 </p>
+        <p>This site is designed to integrated interesting ideas! </p>
+    </footer>
+</body>
+</html>
